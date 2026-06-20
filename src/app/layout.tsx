@@ -7,6 +7,9 @@ import { QueryProvider } from '@/components/providers'
 export const metadata: Metadata = {
   title: 'Lazybell',
   description: 'チームのスケジュールとリマインダー管理',
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
