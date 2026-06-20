@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -20,6 +20,7 @@ type FormValues = z.infer<typeof schema>
 export default function LoginPage() {
   const { login } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [serverError, setServerError] = useState('')
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({
@@ -30,7 +31,11 @@ export default function LoginPage() {
     setServerError('')
     try {
       await login(values.username, values.password)
-      router.push('/dashboard')
+      const redirect = searchParams.get('redirect')
+      const destination = redirect && redirect.startsWith('/') && !redirect.startsWith('//')
+        ? redirect
+        : '/dashboard'
+      router.push(destination)
     } catch (err) {
       setServerError(extractApiError(err))
     }
