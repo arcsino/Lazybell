@@ -1,8 +1,8 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Bell,
   Calendar,
   Home,
   LogOut,
@@ -45,9 +45,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       {/* Header */}
       <div className="flex h-16 items-center justify-between px-6 border-b border-zinc-800">
         <Link href="/" className="flex items-center gap-2.5" onClick={onClose}>
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-600">
-            <Bell className="h-4 w-4 text-white" />
-          </div>
+          <Image src="/lazybell.png" alt="Lazybell" width={28} height={28} className="rounded-lg" />
           <span className="text-sm font-semibold text-white">Lazybell</span>
         </Link>
         {onClose && (

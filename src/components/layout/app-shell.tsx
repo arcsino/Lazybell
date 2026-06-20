@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Menu } from 'lucide-react'
 import { Sidebar } from './sidebar'
@@ -38,7 +39,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <Link href="/" className="text-sm font-semibold text-zinc-900 hover:text-brand-700 transition-colors">Lazybell</Link>
+          <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-zinc-900 hover:text-brand-700 transition-colors">
+            <Image src="/lazybell.png" alt="Lazybell" width={24} height={24} className="rounded-md" />
+            Lazybell
+          </Link>
         </header>
 
         <main className="flex-1 overflow-y-auto">

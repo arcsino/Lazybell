@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Bell,
@@ -35,9 +36,7 @@ export default function HomePage() {
       <header className="fixed inset-x-0 top-0 z-50 bg-zinc-950">
         <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-600 transition-all group-hover:bg-brand-500">
-              <Bell className="h-4 w-4 text-white" />
-            </div>
+            <Image src="/lazybell.png" alt="Lazybell" width={28} height={28} className="rounded-lg" />
             <span className="text-sm font-semibold text-white">Lazybell</span>
           </Link>
 
@@ -309,9 +308,7 @@ export default function HomePage() {
       <footer className="bg-zinc-950">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-8">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-brand-600/80 transition-all group-hover:bg-brand-600">
-              <Bell className="h-3.5 w-3.5 text-white" />
-            </div>
+            <Image src="/lazybell.png" alt="Lazybell" width={24} height={24} className="rounded-md opacity-80 group-hover:opacity-100 transition-opacity" />
             <span className="text-sm font-semibold text-zinc-400 transition-colors group-hover:text-white">
               Lazybell
             </span>
