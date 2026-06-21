@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { Calendar, Check, Clock, Tag as TagIcon, Trash2, Edit2 } from 'lucide-react'
+import { Calendar, Check, Clock, Trash2, Edit2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatDate, formatDateTime, isOverdue } from '@/lib/utils'
@@ -76,11 +76,15 @@ export function ScheduleCard({
             {schedule.subject && (
               <Badge variant="brand" className="text-xs">{schedule.subject.name}</Badge>
             )}
-            {schedule.tags.map((tag) => (
-              <Badge key={tag.id} variant="default" className="flex items-center gap-1 text-xs">
-                <TagIcon className="h-2.5 w-2.5" />
+            {[...schedule.tags].sort((a, b) => a.priority - b.priority).map((tag) => (
+              <span
+                key={tag.id}
+                className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium"
+                style={{ borderColor: tag.color, color: tag.color }}
+              >
+                <span className="h-1.5 w-1.5 rounded-full shrink-0" style={{ backgroundColor: tag.color }} />
                 {tag.name}
-              </Badge>
+              </span>
             ))}
           </div>
 

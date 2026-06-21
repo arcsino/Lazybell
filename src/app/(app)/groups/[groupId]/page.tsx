@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Calendar,
   Settings,
@@ -24,7 +24,7 @@ import {
   UserCheck,
   ArrowRightLeft,
 } from "lucide-react";
-import { groupsApi, invitesApi } from "@/lib/api/groups";
+import { groupsApi } from "@/lib/api/groups";
 import { schedulesApi, type ScheduleCreatePayload } from "@/lib/api/schedules";
 import { useAuth } from "@/contexts/auth-context";
 import { useToast } from "@/components/ui/toast";
@@ -79,9 +79,6 @@ export default function GroupDetailPage({
 }) {
   const { groupId } = params;
   const { user } = useAuth();
-  const { toast } = useToast();
-  const router = useRouter();
-  const qc = useQueryClient();
   const [activeTab, setActiveTab] = useState<Tab>("schedules");
 
   const { data: group, isLoading: groupLoading } = useQuery({
@@ -296,13 +293,20 @@ function SchedulesTab({
     completed: "完了",
   } as const;
 
-  const filtered = schedules.filter((s) => {
-    if (filter === "pending" && s.completed_by_me) return false;
-    if (filter === "completed" && !s.completed_by_me) return false;
-    if (subjectFilter && s.subject?.id !== subjectFilter) return false;
-    if (tagFilter && !s.tags.some((t) => t.id === tagFilter)) return false;
-    return true;
-  });
+  const filtered = schedules
+    .filter((s) => {
+      if (filter === "pending" && s.completed_by_me) return false;
+      if (filter === "completed" && !s.completed_by_me) return false;
+      if (subjectFilter && s.subject?.id !== subjectFilter) return false;
+      if (tagFilter && !s.tags.some((t) => t.id === tagFilter)) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      if (!a.deadline && !b.deadline) return 0;
+      if (!a.deadline) return 1;
+      if (!b.deadline) return -1;
+      return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+    });
 
   const hasFilters = subjectFilter || tagFilter;
 
@@ -1976,35 +1980,6 @@ function SettingsTab({
         </Card>
       )}
     </div>
-  );
-}
-
-function LeaveGroupButton({
-  groupId,
-  groupName,
-}: {
-  groupId: string;
-  groupName: string;
-}) {
-  const { toast } = useToast();
-  const router = useRouter();
-  const qc = useQueryClient();
-
-  const handleLeave = async () => {
-    if (!confirm(`「${groupName}」を退出しますか？`)) return;
-    try {
-      await groupsApi.leave(groupId);
-      qc.invalidateQueries({ queryKey: ["groups"] });
-      router.push("/groups");
-    } catch (err) {
-      toast(extractApiError(err), "error");
-    }
-  };
-
-  return (
-    <Button variant="outline" size="sm" onClick={handleLeave}>
-      <LogOut className="h-4 w-4" /> 退出
-    </Button>
   );
 }
 
