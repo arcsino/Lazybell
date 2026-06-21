@@ -302,20 +302,21 @@ function SchedulesTab({
     return true;
   });
 
-  const byDeadline = (a: Schedule, b: Schedule) => {
+  const sortWithinSection = (a: Schedule, b: Schedule) => {
+    if (a.completed_by_me !== b.completed_by_me) return a.completed_by_me ? 1 : -1;
     if (!a.deadline && !b.deadline) return 0;
     if (!a.deadline) return 1;
     if (!b.deadline) return -1;
     return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
   };
 
-  const activeSchedules = filtered
-    .filter((s) => !isOverdue(s.deadline) || s.completed_by_me)
-    .sort(byDeadline);
+  const upcomingSchedules = filtered
+    .filter((s) => !isOverdue(s.deadline))
+    .sort(sortWithinSection);
 
   const overdueSchedules = filtered
-    .filter((s) => isOverdue(s.deadline) && !s.completed_by_me)
-    .sort(byDeadline);
+    .filter((s) => isOverdue(s.deadline))
+    .sort(sortWithinSection);
 
   const hasFilters = subjectFilter || tagFilter;
 
@@ -472,9 +473,9 @@ function SchedulesTab({
         </Card>
       ) : (
         <div className="space-y-6">
-          {activeSchedules.length > 0 && (
+          {upcomingSchedules.length > 0 && (
             <div className="space-y-3">
-              {activeSchedules.map((s) => (
+              {upcomingSchedules.map((s) => (
                 <ScheduleCard
                   key={s.id}
                   schedule={s}
@@ -498,7 +499,7 @@ function SchedulesTab({
                 </span>
                 <div className="flex-1 border-t border-red-200" />
               </div>
-              <div className="space-y-3 opacity-60">
+              <div className="space-y-3">
                 {overdueSchedules.map((s) => (
                   <ScheduleCard
                     key={s.id}
@@ -514,6 +515,7 @@ function SchedulesTab({
               </div>
             </div>
           )}
+
         </div>
       )}
 

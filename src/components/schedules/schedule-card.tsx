@@ -20,7 +20,7 @@ interface ScheduleCardProps {
 export function ScheduleCard({
   schedule, groupId, permissions, currentUserId, onComplete, onEdit, onDelete
 }: ScheduleCardProps) {
-  const overdue = isOverdue(schedule.deadline) && !schedule.completed_by_me
+  const overdue = isOverdue(schedule.deadline)
   const canEdit =
     schedule.created_by.id === currentUserId || permissions.can_edit_schedule
   const canDelete = canEdit
